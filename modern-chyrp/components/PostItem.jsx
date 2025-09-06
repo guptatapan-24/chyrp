@@ -34,7 +34,7 @@ export default function PostItem({ post }) {
   }
   const isQuote = post.type === "quote";
   const fileUrls = post.file_urls || [];
-  const backendUrl = "http://localhost:8000";
+  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
 
 const imageUrls = fileUrls
   .filter((url) => getFileType(url) === "image")
