@@ -389,12 +389,14 @@ async def upload_file_to_supabase(file: UploadFile) -> str:
     ext = file.filename.split(".")[-1]
     unique_name = f"{uuid.uuid4().hex}.{ext}"
     content = await file.read()
+    logging.info(f"Uploading file {file.filename} as {unique_name}")
     res = supabase.storage.from_(SUPABASE_BUCKET).upload(unique_name, content)
     if res.get("error"):
+        logging.error(f"Supabase upload error: {res['error']}")
         raise HTTPException(status_code=500, detail="Upload failed")
     public_url = supabase.storage.from_(SUPABASE_BUCKET).get_public_url(unique_name)
+    logging.info(f"Uploaded file URL: {public_url.get('publicURL')}")
     return public_url.get("publicURL")
-
 # Then your upload endpoint can call it
 @app.post("/upload")
 async def upload_endpoint(files: list[UploadFile]):
