@@ -8,7 +8,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const posts = await getPosts();
 
   // Map posts to sitemap entries safely
-  const postUrls = posts.map((post) => ({
+  const postUrls = posts.map((post: any) => ({
     url: `${baseUrl}/posts/${post.slug}`,
     lastModified: post.updatedAt,
     changeFrequency: "weekly",
