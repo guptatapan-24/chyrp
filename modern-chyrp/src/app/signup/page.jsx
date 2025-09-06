@@ -20,13 +20,18 @@ export default function SignUpPage() {
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: new URLSearchParams({ username, password }).toString(),
     });
-
     if (res.ok) {
-      const data = await res.json();
-      if (data.token) {
-        localStorage.setItem("token", data.token);  // Store token
+      // Signup success, auto-login using NextAuth
+      const signInResult = await signIn("credentials", {
+        redirect: false,
+        username,
+        password,
+      });
+      if (signInResult.ok) {
+        router.push("/");  // redirect to homepage or dashboard
+      } else {
+        setError("Signup succeeded but login failed, please login manually.");
       }
-      router.push("/login");  // Or redirect wherever appropriate
     } else {
       const data = await res.json();
       setError(data.detail || "Failed to register user");
@@ -36,7 +41,6 @@ export default function SignUpPage() {
   }
   setLoading(false);
 }
-
 
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow">
