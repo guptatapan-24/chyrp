@@ -130,15 +130,23 @@ async def receive_webmention(source: str = Form(...), target: str = Form(...)):
 
 
 # --- AUTHENTICATION FOR NEXTAUTH ---
+import logging
+
 @app.post("/api/auth/login")
 async def login(request: Request):
     data = await request.json()
     username = data.get("username")
     password = data.get("password")
+    logging.info(f"Login attempt: username={username}, password={password}")
     user = await db.users.find_one({"username": username})
-    if user and user.get("password") == password:
-        return {"id": str(user["_id"]), "username": user["username"]}
-    raise HTTPException(status_code=401, detail="Invalid credentials")
+    if not user:
+        logging.info("User not found")
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+    if user.get("password") != password:
+        logging.info("Password mismatch")
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+    logging.info("Login successful")
+    return {"id": str(user["_id"]), "username": user["username"]}
 
 
 # --- Increment Post Views ---
