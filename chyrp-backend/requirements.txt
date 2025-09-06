@@ -8,5 +8,4 @@ pydantic==1.10.12
 slugify==0.0.1
 aiofiles==23.1.0
 beautifulsoup4==4.12.2
-
-
+pymongo==4.3.3
