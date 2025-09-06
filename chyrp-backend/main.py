@@ -25,10 +25,15 @@ app = FastAPI()
 
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
-
+origins = [
+    "https://chyrp-pi.vercel.app",  # your frontend URL
+    # Optionally add localhost URLs for development
+    "http://localhost:3000",
+]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Update for production domain
+    allow_origins=origins,  # Update for production domain
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
