@@ -211,7 +211,7 @@ const imageUrls = fileUrls
         {/* Other media files */}
         {otherFiles.map((fileUrl, idx) => {
           const fileType = getFileType(fileUrl);
-          const src = `http://localhost:8000/${fileUrl}`;
+          const src = `${backendUrl}/${fileUrl}`;
           if (fileType === "video") {
             return (
               <video key={idx} controls src={src} className="w-full max-h-[300px] rounded mb-4">
