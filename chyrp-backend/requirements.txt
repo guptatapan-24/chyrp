@@ -34,7 +34,7 @@ fqdn==1.5.1
 greenlet==3.2.4
 h11==0.16.0
 httpcore==1.0.9
-httpx==0.28.1
+httpx>=0.23.0,<0.24.0
 idna==3.10
 ipykernel==6.29.5
 ipython==9.4.0
@@ -43,7 +43,6 @@ ipywidgets==8.1.7
 isoduration==20.11.0
 jedi==0.19.2
 Jinja2==3.1.6
-joblib==1.5.1
 json5==0.12.0
 jsonpointer==3.0.0
 jsonschema==4.24.0
@@ -139,4 +138,5 @@ websocket-client==1.8.0
 widgetsnbextension==4.0.14
 youtube-dl==2021.12.17
 yt-dlp==2025.8.20
+
 
