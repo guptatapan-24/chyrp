@@ -15,11 +15,12 @@ export default function SignUpPage() {
     setError(null);
 
     try {
-      const res = await fetch("http://localhost:8000/api/auth/demo-register", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({ username, password }).toString(),
-      });
+  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
+  const res = await fetch(`${backendUrl}/api/auth/demo-register`, {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({ username, password }).toString(),
+  });
       if (res.ok) {
         router.push("/login");
       } else {
