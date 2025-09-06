@@ -24,7 +24,7 @@ SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 SUPABASE_BUCKET = os.getenv("SUPABASE_BUCKET", "uploads")
 
-supabase=create_client(SUPABASE_URL, SUPABASE_KEY)
+supabase_client=create_client(SUPABASE_URL, SUPABASE_KEY)
 
 app = FastAPI()
 
@@ -391,11 +391,11 @@ async def upload_file_to_supabase(file: UploadFile) -> str:
     unique_name = f"{uuid.uuid4().hex}.{ext}"
     content = await file.read()
     logging.info(f"Uploading file {file.filename} as {unique_name}")
-    res = supabase.storage.from_(SUPABASE_BUCKET).upload(unique_name, content)
+    res = supabase_client.storage.from_(SUPABASE_BUCKET).upload(unique_name, content)
     if res.get("error"):
         logging.error(f"Supabase upload error: {res['error']}")
         raise HTTPException(status_code=500, detail="Upload failed")
-    public_url = supabase.storage.from_(SUPABASE_BUCKET).get_public_url(unique_name)
+    public_url = supabase_client.storage.from_(SUPABASE_BUCKET).get_public_url(unique_name)
     logging.info(f"Uploaded file URL: {public_url.get('publicURL')}")
     return public_url.get("publicURL")
 # Then your upload endpoint can call it
