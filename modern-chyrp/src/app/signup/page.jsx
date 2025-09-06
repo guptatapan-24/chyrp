@@ -14,7 +14,7 @@ export default function SignUpPage() {
   setLoading(true);
   setError(null);
   try {
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
+    const backendUrl = (process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000").replace(/\/$/, "");
     const res = await fetch(`${backendUrl}/api/auth/demo-register`, {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
