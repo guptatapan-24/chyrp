@@ -392,7 +392,7 @@ async def upload_file_to_supabase(file: UploadFile) -> str:
     content = await file.read()
     logging.info(f"Uploading file {file.filename} as {unique_name}")
     res = supabase_client.storage.from_(SUPABASE_BUCKET).upload(unique_name, content)
-    if not res.ok:
+    if res.status_code >= 400:
         logging.error(f"Supabase upload error: {res['error']}")
         raise HTTPException(status_code=500, detail="Upload failed")
     public_url = supabase_client.storage.from_(SUPABASE_BUCKET).get_public_url(unique_name)
