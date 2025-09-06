@@ -386,6 +386,7 @@ async def get_comments(
 
 
 async def upload_file_to_supabase(file: UploadFile) -> str:
+    logging.info(f"Type of supabase: {type(supabase)}")
     ext = file.filename.split(".")[-1]
     unique_name = f"{uuid.uuid4().hex}.{ext}"
     content = await file.read()
