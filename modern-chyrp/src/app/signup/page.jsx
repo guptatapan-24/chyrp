@@ -10,28 +10,33 @@ export default function SignUpPage() {
   const [loading, setLoading] = useState(false);
 
   async function handleSignUp(e) {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
+  e.preventDefault();
+  setLoading(true);
+  setError(null);
+  try {
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
+    const res = await fetch(`${backendUrl}/api/auth/demo-register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({ username, password }).toString(),
+    });
 
-    try {
-  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
-  const res = await fetch(`${backendUrl}/api/auth/demo-register`, {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams({ username, password }).toString(),
-  });
-      if (res.ok) {
-        router.push("/login");
-      } else {
-        const data = await res.json();
-        setError(data.detail || "Failed to register user");
+    if (res.ok) {
+      const data = await res.json();
+      if (data.token) {
+        localStorage.setItem("token", data.token);  // Store token
       }
-    } catch (err) {
-      setError("Network error, please try again");
+      router.push("/login");  // Or redirect wherever appropriate
+    } else {
+      const data = await res.json();
+      setError(data.detail || "Failed to register user");
     }
-    setLoading(false);
+  } catch (err) {
+    setError("Network error, please try again");
   }
+  setLoading(false);
+}
+
 
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow">
