@@ -26,7 +26,7 @@ app = FastAPI()
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
 origins = [
-    "https://chyrp-pi.vercel.app",  # your frontend URL
+    "https://chyrp-six.vercel.app",  # your frontend URL
     # Optionally add localhost URLs for development
     "http://localhost:3000",
 ]
