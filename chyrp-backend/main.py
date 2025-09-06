@@ -207,10 +207,10 @@ async def create_post(
 
     file_urls = []
     if files:
-    for file in files:
-        url = await upload_file_to_supabase(file)
-        file_urls.append(url)
-        await db.post_files.insert_one({"post_id": post_id, "file_url": url})
+        for file in files:
+            url = await upload_file_to_supabase(file)
+            file_urls.append(url)
+            await db.post_files.insert_one({"post_id": post_id, "file_url": url})
 
     post["id"] = str(post_id)
     post["file_urls"] = file_urls
