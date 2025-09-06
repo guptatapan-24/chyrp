@@ -12,6 +12,7 @@ from bs4 import BeautifulSoup
 from motor.motor_asyncio import AsyncIOMotorClient
 from bson import ObjectId
 import aiofiles
+from supabase import create_client
 
 
 # MongoDB Atlas Connection
@@ -19,6 +20,11 @@ MONGODB_URI = "mongodb+srv://guptatapan2006_db_user:jBEOvQtOjCWZnPu3@cluster0.si
 client = AsyncIOMotorClient(MONGODB_URI)
 db = client.get_database()  # Use DB from URI or specify name here
 
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+SUPABASE_BUCKET = os.getenv("SUPABASE_BUCKET", "uploads")
+
+supabase=create_client(SUPABASE_URL, SUPABASE_KEY)
 
 app = FastAPI()
 
@@ -201,15 +207,10 @@ async def create_post(
 
     file_urls = []
     if files:
-        for file in files:
-            file_ext = file.filename.split(".")[-1]
-            filename = f"{uuid.uuid4().hex}.{file_ext}"
-            filepath = os.path.join("uploads", filename)
-            content = await file.read()
-            async with aiofiles.open(filepath, "wb") as out_file:
-                await out_file.write(content)
-            file_urls.append(f"/uploads/{filename}")
-            await db.post_files.insert_one({"post_id": post_id, "file_url": f"/uploads/{filename}"})
+    for file in files:
+        url = await upload_file_to_supabase(file)
+        file_urls.append(url)
+        await db.post_files.insert_one({"post_id": post_id, "file_url": url})
 
     post["id"] = str(post_id)
     post["file_urls"] = file_urls
@@ -382,3 +383,24 @@ async def get_comments(
     total = await db.comments.count_documents({"post_id": post_oid})
     next_page = page + 1 if skip + len(comments) < total else None
     return {"comments": comments, "nextPage": next_page}
+
+
+async def upload_file_to_supabase(file: UploadFile) -> str:
+    ext = file.filename.split(".")[-1]
+    unique_name = f"{uuid.uuid4().hex}.{ext}"
+    content = await file.read()
+    res = supabase.storage.from_(SUPABASE_BUCKET).upload(unique_name, content)
+    if res.get("error"):
+        raise HTTPException(status_code=500, detail="Upload failed")
+    public_url = supabase.storage.from_(SUPABASE_BUCKET).get_public_url(unique_name)
+    return public_url.get("publicURL")
+
+# Then your upload endpoint can call it
+@app.post("/upload")
+async def upload_endpoint(files: list[UploadFile]):
+    urls = []
+    for file in files:
+        url = await upload_file_to_supabase(file)
+        urls.append(url)
+        # Save url in MongoDB as needed
+    return {"urls": urls}
