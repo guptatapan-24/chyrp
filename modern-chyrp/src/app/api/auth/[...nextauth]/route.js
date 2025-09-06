@@ -26,13 +26,13 @@ export const authOptions = {
       },
     }),
   ],
+  secret: process.env.NEXTAUTH_SECRET, // <-- Add this line
   session: { strategy: "jwt" },
   pages: {
     signIn: "/login",
   },
   callbacks: {
     async jwt({ token, user }) {
-      // On sign in, add `id` and `username` to the JWT token
       if (user) {
         token.id = user.id;
         token.username = user.username;
@@ -40,14 +40,12 @@ export const authOptions = {
       return token;
     },
     async session({ session, token }) {
-      // Make `id` and `username` available in session.user
       session.user.id = token.id;
       session.user.username = token.username;
       return session;
     },
   },
 };
-
 
 const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };
