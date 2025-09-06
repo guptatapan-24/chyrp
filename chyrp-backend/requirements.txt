@@ -1,7 +1,6 @@
 fastapi==0.116.1
 uvicorn[standard]==0.22.0
 motor==3.1.1
-bson==0.5.10
 python-multipart==0.0.6
 supabase==1.0.0
 httpx>=0.23.0,<0.24.0
@@ -9,4 +8,5 @@ pydantic==1.10.12
 slugify==0.0.1
 aiofiles==23.1.0
 beautifulsoup4==4.12.2
+
 
