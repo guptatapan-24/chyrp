@@ -7,7 +7,7 @@ interface Post {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "http://localhost:3000";
+  const baseUrl = process.env.NEXT_PUBLIC_FRONTEND_URL || "http://localhost:3000";
   const posts: Post[] = await getPosts();
 
   const postUrls: MetadataRoute.Sitemap = posts.map((post: Post) => ({
