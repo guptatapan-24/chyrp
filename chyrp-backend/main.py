@@ -392,13 +392,12 @@ async def upload_file_to_supabase(file: UploadFile) -> str:
 
     res = supabase_client.storage.from_(SUPABASE_BUCKET).upload(unique_name, content)
 
-    # Check if error attribute exists and is truthy
     if hasattr(res, "error") and res.error is not None:
         raise HTTPException(status_code=500, detail=f"Upload failed: {res.error}")
 
-    public_url_object = supabase_client.storage.from_(SUPABASE_BUCKET).get_public_url(unique_name)
-    # Adjust according to returned type structure
-    return getattr(public_url_object, "public_url", None) or public_url_object.get("publicURL")# Then your upload endpoint can call it
+    public_url = supabase_client.storage.from_(SUPABASE_BUCKET).get_public_url(unique_name)
+
+    return public_url  # Return the string URL directly
 @app.post("/upload")
 async def upload_endpoint(files: list[UploadFile]):
     urls = []
