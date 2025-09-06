@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import  { signIn } from  "next-auth/react";
 
 export default function SignUpPage() {
   const [username, setUsername] = useState("");
@@ -37,6 +38,7 @@ export default function SignUpPage() {
       setError(data.detail || "Failed to register user");
     }
   } catch (err) {
+    console.error("Signup error:", err);
     setError("Network error, please try again");
   }
   setLoading(false);
