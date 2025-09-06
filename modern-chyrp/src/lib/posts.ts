@@ -9,7 +9,7 @@ export async function getPosts() {
   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
 
 
-  const res = await fetch(`${baseUrl}/posts`, { cache: "no-store" });
+  const res = await fetch(`${backendUrl}/posts`, { cache: "no-store" });
   if (!res.ok) {
     return [];
   }
