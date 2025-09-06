@@ -6,7 +6,8 @@ interface Post {
 }
 
 export async function getPosts() {
-  const baseUrl = "http://localhost:8000"; // Your backend base URL
+  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
+
 
   const res = await fetch(`${baseUrl}/posts`, { cache: "no-store" });
   if (!res.ok) {
