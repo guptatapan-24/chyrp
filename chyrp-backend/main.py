@@ -16,7 +16,7 @@ from supabase import create_client
 
 
 # MongoDB Atlas Connection
-MONGODB_URI = "mongodb+srv://guptatapan2006_db_user:jBEOvQtOjCWZnPu3@cluster0.sipb4st.mongodb.net/app_data?retryWrites=true&w=majority&appName=Cluster0"
+MONGODB_URI = "mongodb+srv://guptatapan2006_db_user:Jan242006@cluster0.sipb4st.mongodb.net/app_data?retryWrites=true&w=majority&appName=Cluster0"
 client = AsyncIOMotorClient(MONGODB_URI)
 db = client.get_database()  # Use DB from URI or specify name here
 
